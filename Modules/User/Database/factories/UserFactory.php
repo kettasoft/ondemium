@@ -1,9 +1,10 @@
 <?php
+
 namespace Modules\User\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactoryFactory extends Factory
+class UserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -24,4 +25,3 @@ class UserFactoryFactory extends Factory
         ];
     }
 }
-
