@@ -1,0 +1,14 @@
+{
+    "name": "Doctor",
+    "alias": "doctor",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Doctor\\Providers\\DoctorServiceProvider",
+        "Modules\\Doctor\\Providers\\EventServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
