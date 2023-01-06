@@ -5,7 +5,7 @@ namespace Modules\Doctor\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckIfDoctor
+class IsActive
 {
     /**
      * Handle an incoming request.
@@ -16,13 +16,6 @@ class CheckIfDoctor
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()->tokenCan('doctor')) {
-            return $next($request);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthorized process'
-        ], 401);
+        return $next($request);
     }
 }

@@ -15,21 +15,16 @@ class AuthController extends Controller
 {
     public function signup(RegisterRequest $request)
     {
-
         $data = $request->all();
 
         $doctor = Doctor::create($request->except('useragent'));
+        $useragent = request()->header('User-Agent');
 
-        event(new \Modules\Doctor\Events\Registered($doctor, $request->only('useragent')));
+        event(new \Modules\Doctor\Events\Registered($doctor, $useragent));
 
-        $success['token'] = $doctor->createToken($data['username'])->plainTextToken;
+        $success['token'] = $doctor->createToken($data['username'], ['doctor'])->plainTextToken;
 
-        $response = [
-            'success' => true,
-            'data' => $success,
-        ];
-
-        return response()->json($response);
+        return response()->json(['success' => true, 'data' => $success]);
     }
 
     public function login(LoginRequest $request)
@@ -51,14 +46,15 @@ class AuthController extends Controller
 
             $doctor = $request->user('doctor');
 
-            $token = ['token' => $doctor->createToken($request->diverse)->plainTextToken];
+            foreach($doctor->device as $device) {
+                if ($device->ip_address == $request->ip()) {
+                    $token = ['token' => create_personal_access_token($doctor, $doctor->username, ['doctor'])];
+                    return response()->json(['success' => true, 'data' => $token]);
+                }
+            }
+            
+            event(new \Modules\Doctor\Events\UnknownDeviceAttemptedAccessAccount($doctor));
 
-            $response = [
-                'success' => true,
-                'data' => $token,
-            ];
-
-            return response()->json($response);
         } else {
             $response = [
                 'success' => false,

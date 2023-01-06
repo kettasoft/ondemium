@@ -19,11 +19,17 @@ class DoctorFactory extends Factory
      */
     public function definition()
     {
-        $username = $this->faker->userName();
-        $first_name = $this->faker->firstName('male');
-        $last_name = $this->faker->lastName('male');
         return [
-            //
+            'username' => $this->faker->userName(),
+            'first_name' => $this->faker->firstName('male'),
+            'last_name' => $this->faker->lastName('male'),
+            'email' => $this->faker->email,
+            'photo' => json_encode(['default' => $this->faker->imageUrl(640, 480, 'cats')]),
+            'gender' => 'male',
+            'country_code' => $this->faker->postcode,
+            'date_birth' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
+            'phone' => $this->faker->e164PhoneNumber(),
+            'password' => bcrypt('0100123344'),
         ];
     }
 }

@@ -4,6 +4,8 @@ namespace Modules\Doctor\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
+use Modules\Doctor\Events\UnknownDeviceAttemptedAccessAccount;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -14,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         \Modules\Doctor\Events\Registered::class => [
             \Modules\Doctor\Listeners\RegisterTheUserAgent::class
+        ],
+
+        \Modules\Doctor\Events\Login::class => [],
+
+        UnknownDeviceAttemptedAccessAccount::class => [
+            \Modules\Doctor\Listeners\VerificationTheLoginProcess::class,
         ]
     ];
 }

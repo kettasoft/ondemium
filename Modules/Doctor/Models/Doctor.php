@@ -6,21 +6,37 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Education\Models\Education;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Laravel\Scout\Searchable;
+use App\Traits\Permissions;
 
 class Doctor extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Searchable;
+    use HasApiTokens, HasFactory, Notifiable, Searchable, Permissions;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'plan_id',
+        'username',
+        'first_name',
+        'last_name',
+        'photo',
+        'gender',
+        'date_birth',
+        'email',
+        'phone',
+        'country_code',
+        'permissions',
+        'password',
+        'status',
+        'is_verified',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -39,6 +55,9 @@ class Doctor extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_verified' => 'boolean',
+        'status' => 'boolean',
+        'plan_id' => 'integer'
     ];
 
     public function toSearchableArray()
@@ -59,19 +78,26 @@ class Doctor extends Authenticatable
     /**
      * Converting permissions from JSON to an array.
      *
-     * @param string|null $permissions
-     * @return array
+     * @return  string
      */
-    protected function permissions()
+    public function getPermissionAttribute()
     {
-        return Attribute::make(
-            get: fn($permissions) => json_decode($permissions, true)
-        );
+        return json_decode($this->permissions, true);
     }
 
-    public function setPremissionsAttribute()
+    public static function addPermission()
     {
-        $this->attributes['permissions'] = json_encode($this->getPremissionsAttribute($this->permissions));
+
+    }
+
+    public function posts()
+    {
+        return $this->morphMany(\Modules\Post\Models\Post::class, 'createdable')->select('body', 'photos');
+    }
+
+    public function device()
+    {
+        return $this->hasMany(\Modules\Device\Models\Device::class, 'doctor_id');
     }
 
     public function education()

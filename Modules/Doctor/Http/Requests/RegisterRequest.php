@@ -22,7 +22,7 @@ class RegisterRequest extends FormRequest
             'gender' => ['required', 'in:male,female'],
             'date_birth' => ['required', 'date'],
             'phone' => ['required', 'unique:doctors'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'unique:doctors'],
             'password' => ['required', 'min:8'],
         ];
     }

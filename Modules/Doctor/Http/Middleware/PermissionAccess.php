@@ -5,7 +5,7 @@ namespace Modules\Doctor\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckIfDoctor
+class PermissionAccess
 {
     /**
      * Handle an incoming request.
@@ -16,13 +16,11 @@ class CheckIfDoctor
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()->tokenCan('doctor')) {
-            return $next($request);
-        }
+        // $action = request()->route()->getAction()['permissions'];
+        // $permissions = require_once(app_path('permissions.php'));
+        // if (\Arr::get($permissions, $action)) {
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthorized process'
-        ], 401);
+        // }
+        return $next($request);
     }
 }
