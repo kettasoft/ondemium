@@ -10,15 +10,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\RegisterRequest;
+use Modules\User\Models\User;
 
 class AuthController extends Controller
 {
+
     public function login(LoginRequest $request)
     {
-        if (Auth::attempt($request->except(['remember']), $request->remember)) {
+        if (Auth::attempt($request->only(['phone', 'password']))) {
             $user = $request->user();
 
-            $success['token'] = $user->createToken(env('APP_NAME'))->planTextToken;
+            $success['token'] = $user->createToken(env('APP_NAME'))->plainTextToken;
             $success['user'] = $user->first_name . ' ' . $user->last_name;
 
             $response = [
@@ -33,20 +35,22 @@ class AuthController extends Controller
         }
     }
 
-    public function register(RegisterRequest $request)
+    public function signup(RegisterRequest $request)
     {
         $data = $request->all();
-        $data['password'] = Hash::make($data['password']); // Hashes the password
-        $data['photo'] = json_encode([
-            'default' => Str::lower($data['first_name'][0]) . '.' . env('AVATAR_EXTENSION', 'png')
+        $data['photo'] = 'url';
+
+        $user = User::create($data);
+
+        $token = $user->createToken($data['phone'], ['user'])->plainTextToken;
+
+        $success['name'] = $data['first_name'] . ' ' . $data['last_name'];
+        $success['token'] = $token;
+
+        return response()->json([
+            'success' => true,
+            'data' => $success,
+            'message' => 'Register successfully'
         ]);
-        $data['username'] = Str::lower($data['first_name']) . rand(0, 1000000000);
-
-        dd($data);
-    }
-
-    public function logout()
-    {
-        return 'logout';
     }
 }

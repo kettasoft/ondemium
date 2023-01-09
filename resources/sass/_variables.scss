@@ -1,0 +1,30 @@
+// Body
+$body-bg: #f8fafc;
+
+$base-border-rdaius: 6px;
+
+// Typography
+$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+// Colors
+$primary-color: rgb(100 80 267 / 1);
+$success-color: #3cc196;
+$warning-color: #3cc196;
+$danger-color: #3cc196;
+
+$btn-border-radius: 6px;
+$btn-color: white;
+
+// scss-docs-start caret-variables
+$caret-width:                 .3em !default;
+$caret-vertical-align:        $caret-width * .85 !default;
+$caret-spacing:               $caret-width * .85 !default;
+
+$transition-base:             all .2s ease-in-out !default;
+$transition-fade:             opacity .15s linear !default;
+
+
+
+

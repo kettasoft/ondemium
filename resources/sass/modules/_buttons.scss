@@ -1,0 +1,41 @@
+@import '../variables';
+
+.btn {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    min-height: 40px;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    box-sizing: border-box;
+    text-align: center;
+    transition: background-color 0.3s linear 0s;
+    border: 0;
+}
+
+.btn-success {
+    background-color: #3cc196;
+
+    &:active {
+        background-color: rgb(37, 114, 78);
+    }
+    &:hover {
+        background-color: rgb(42, 145, 107);
+    }
+}
+
+.btn-primary {
+    background-color: #235da5;
+
+    &:hover {
+        background-color: rgb(35 93 126);
+    }
+}

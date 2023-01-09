@@ -1,3 +1,16 @@
 {
-    "User": true
+    "User": true,
+    "Blog": true,
+    "Post": true,
+    "Education": true,
+    "Plan": true,
+    "Clinic": true,
+    "FollowSystem": true,
+    "Device": true,
+    "Setting": true,
+    "Address": true,
+    "Comment": true,
+    "Group": true,
+    "Doctor": true,
+    "Booking": true
 }

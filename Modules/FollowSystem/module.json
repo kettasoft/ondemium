@@ -1,0 +1,13 @@
+{
+    "name": "FollowSystem",
+    "alias": "followsystem",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FollowSystem\\Providers\\FollowSystemServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

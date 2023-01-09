@@ -20,8 +20,9 @@ class RegisterRequest extends FormRequest
             'last_name' => ['required', 'alpha', 'min:3', 'max:15'],
             'gender' => ['required', 'in:male,female'],
             'date_birth' => ['required', 'date'],
-            'phone' => ['required', 'integer', 'unique:users'],
-            'password' => ['required']
+            'phone' => ['required', 'numeric', 'unique:users'],
+            'country_code' => ['required', 'numeric', 'starts_with:+'],
+            'password' => ['required', 'min:8']
         ];
     }
 

@@ -1,0 +1,10 @@
+// Cart
+
+// start-cart
+.card {
+	border-radius: 24px;
+
+	&.card-shadow {
+		box-shadow: rgb(96 97 112 / 16%) 0px 4px 8px 0px, rgb(40 41 61 / 4%) 0px 0px 2px 0px;
+	}
+}

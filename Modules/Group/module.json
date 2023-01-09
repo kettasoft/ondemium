@@ -1,0 +1,13 @@
+{
+    "name": "Group",
+    "alias": "group",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Group\\Providers\\GroupServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

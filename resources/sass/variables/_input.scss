@@ -1,0 +1,66 @@
+@import './color';
+
+// scss-docs-start form-input-variables
+$input-padding-y:                       0.375rem !default;
+$input-padding-x:                       0.75rem !default;
+$input-font-family:                     monospace, sans-serif !default;
+$input-font-size:                       1rem !default;
+$input-font-weight:                     400 !default;
+$input-line-height:                     1.5 !default;
+
+$input-padding-y-sm:                    0.25rem !default;
+$input-padding-x-sm:                    0.5rem !default;
+$input-font-size-sm:                    .875rem !default;
+
+$input-padding-y-lg:                    0.5rem !default;
+$input-padding-x-lg:                    1rem !default;
+$input-font-size-lg:                    1.25rem !default;
+
+$input-width: 100%;
+$input-height: 40px;
+
+$input-bg:                              #ffffff !default;
+$input-color: 							#212529 !default;
+
+$input-disabled-color:                  null !default;
+$input-disabled-bg:                     $gray-200 !default;
+$input-disabled-border-color:           null !default;
+
+$input-border-width: 					1px;
+$input-border-radius: 					6px;
+$input-border-style: 					solid;
+$input-border-color: 					$gray-400;
+
+$input-box-shadow-size: 				0.15rem;
+$input-box-shadow-primary: 0 0 0 $input-box-shadow-size rgb(100 80 267 / 25%);
+$input-box-shadow-danger: 0 0 0 $input-box-shadow-size rgb(100 80 267 / 25%);
+
+$input-on-hover: true;
+$input-box-shadow-on-hover: false;
+
+$input-box-shadow-on-focus: 0 0 0 $input-box-shadow-size rgb(100 80 267 / 25%);
+$input-border-color-on-focus: rgb(100 80 267 / 1);
+
+
+// $input-color:                           $body-color !default;
+// $input-border-color:                    $gray-400 !default;
+// $input-border-width:                    $input-btn-border-width !default;
+// $input-box-shadow:                      $box-shadow-inset !default;
+
+// $input-border-radius:                   $border-radius !default;
+// $input-border-radius-sm:                $border-radius-sm !default;
+// $input-border-radius-lg:                $border-radius-lg !default;
+
+// $input-focus-bg:                        $input-bg !default;
+// $input-focus-border-color:              tint-color($component-active-bg, 50%) !default;
+// $input-focus-color:                     $input-color !default;
+// $input-focus-width:                     $input-btn-focus-width !default;
+// $input-focus-box-shadow:                $input-btn-focus-box-shadow !default;
+
+// $input-placeholder-color:               $gray-600 !default;
+// $input-plaintext-color:                 $body-color !default;
+
+// $input-height-border:                   $input-border-width * 2 !default;
+
+
+$input-transition:                      border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;

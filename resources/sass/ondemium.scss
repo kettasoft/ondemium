@@ -1,0 +1,10 @@
+@import 'src/typography';
+@import './scrollbar';
+@import 'buefy/dist/buefy.css';
+
+@import "libs/main.scss";
+@import "modules/framework";
+
+body {
+	font-family: Inter, sans-serif;
+}

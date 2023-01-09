@@ -1,0 +1,13 @@
+{
+    "name": "Device",
+    "alias": "device",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Device\\Providers\\DeviceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

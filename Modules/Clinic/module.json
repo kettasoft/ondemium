@@ -1,0 +1,13 @@
+{
+    "name": "Clinic",
+    "alias": "clinic",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Clinic\\Providers\\ClinicServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
