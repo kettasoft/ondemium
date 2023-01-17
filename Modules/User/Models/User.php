@@ -60,6 +60,11 @@ class User extends Authenticatable
         return \Modules\User\Database\factories\UserFactory::new();
     }
 
+    public function join()
+    {
+        // return $this->morphTo();
+    }
+
     public function posts()
     {
         // return $this->hasMany(Post::class);

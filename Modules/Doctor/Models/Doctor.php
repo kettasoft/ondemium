@@ -105,6 +105,16 @@ class Doctor extends Authenticatable
         return $this->hasOne(Education::class);
     }
 
+    public function group()
+    {
+        return $this->hasMany(\Modules\Group\Models\Group::class, 'doctor_id');
+    }
+
+    public function join()
+    {
+        return $this->morphMany(\Modules\Group\Models\GroupMember::class, 'memberable');
+    }
+
     protected static function newFactory()
     {
         return \Modules\Doctor\Database\factories\DoctorFactory::new();

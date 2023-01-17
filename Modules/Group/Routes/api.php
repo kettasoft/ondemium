@@ -1,18 +1,18 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Group\Http\Controllers\GroupController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/group', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'group'], function () {
+    Route::get('feed', [GroupController::class, 'index']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/current', [GroupController::class, 'current']);
+        Route::post('/create', [GroupController::class, 'create']);
+        Route::put('{id}/update', [GroupController::class, 'update']);
+        Route::post('{id}/delete', [GroupController::class, 'delete']);
+        Route::get('{id}/members', [GroupController::class, 'members']);
+        Route::post('{id}/join', [GroupController::class, 'join']);
+        Route::get('membership', [GroupController::class, 'membership']);
+    });
+    Route::get('{id}', [GroupController::class, 'get']);
 });

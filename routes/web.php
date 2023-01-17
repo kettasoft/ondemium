@@ -4,18 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppController;
 
 use Modules\Doctor\Models\Doctor;
+use Modules\Group\Models\Memberable;
+use Modules\Group\Models\Group;
+use Modules\Doctor\Transformers\DoctorResource;
 
 Route::group(['middleware' => 'Permission','permissions' => ['post.create']], function () {
 	Route::get('test', function () {
-		// $doctor = \Modules\Doctor\Models\Doctor::with(['posts'])->get();
-		// $doctor = Doctor::with(['posts']);
-		// $post = \Modules\Post\Models\Post::first();
-		// dd($doctor->posts()->create(['body' => 'content']));
+		$id = 1;
+		$members = Memberable::whereHasMorph('memberable', ['*'], function ($query) use ($id) {
+            return $query->where('group_id', $id);
+        })->paginate(20);
 
-		// dd(Doctor::hasPermission('account.username.update'));
-		// $doctor = Doctor::whereId(1)->first();
-		// dd($doctor->device()->create());
-		dump(Doctor::hasPermission(1, 'clinic.create'));
+        foreach ($members as $member) {
+            $data[] = $member->memberable;
+        }
+
+        dump($data);
 	});
 });
 
