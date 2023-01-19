@@ -23,6 +23,22 @@ class PostController extends Controller
     }
 
     /**
+     * View posts for a specific user or doctor.
+     * @param int $created_id
+     * @param int|null $post_id
+     * @return ResponseJson
+     */
+    public function show(int $created_id, $post_id = null)
+    {
+        $posts = Post::where('createdable_id', $created_id);
+        if (is_null($post_id)) {
+            return response()->json($posts->paginate(20));
+        }
+
+        return response()->json($posts->where('id', $post_id)->first());
+    }
+
+    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return ResponseJson

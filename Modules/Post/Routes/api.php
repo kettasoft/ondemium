@@ -6,7 +6,7 @@ use Modules\Post\Http\Controllers\PostController;
 
 // Access path to a post for a specific (user or doctor)
 
-Route::get('{created_id}/posts/{post_id?}', [PostController::class, 'get']);
+Route::get('{created_id}/posts/{post_id?}', [PostController::class, 'show']);
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
 	Route::prefix('post')->group(function() {
