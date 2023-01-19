@@ -14,7 +14,7 @@ class CreatePostRequest extends FormRequest
      *
      * @var bool
      */
-    // protected $stopOnFirstFailure = true;
+    protected $stopOnFirstFailure = true;
 
     /**
      * Get the validation rules that apply to the request.
@@ -24,8 +24,8 @@ class CreatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'photos' => 'required_without:body',
             'body' => 'required_without:photos',
+            'photos' => 'required_without:body',
         ];
     }
 
@@ -51,7 +51,7 @@ class CreatePostRequest extends FormRequest
     public function messages()
     {
         return [
-            // 'body.required_without' => 'dasd',
+            'body.required_without' => 'You cannot create an empty post.',
         ];
     }
 }
