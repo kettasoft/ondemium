@@ -1,21 +1,14 @@
 <?php
 
-namespace Modules\Post\Http\Requests;
+namespace Modules\Comment\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Request;
 
-class CreatePostRequest extends FormRequest
+class AddCommentRequest extends FormRequest
 {
-
-    /**
-     * Indicates whether validation should stop after the first rule failure.
-     *
-     * @var bool
-     */
-    // protected $stopOnFirstFailure = true;
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,8 +17,7 @@ class CreatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'photos' => 'required_without:body',
-            'body' => 'required_without:photos',
+            'comment' => ['required', 'max:250']
         ];
     }
 
@@ -46,12 +38,5 @@ class CreatePostRequest extends FormRequest
             'message'   => 'Validation errors',
             'data'      => $validator->errors()
         ]));
-    }
-
-    public function messages()
-    {
-        return [
-            // 'body.required_without' => 'dasd',
-        ];
     }
 }

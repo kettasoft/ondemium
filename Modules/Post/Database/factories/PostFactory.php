@@ -2,6 +2,7 @@
 namespace Modules\Post\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Doctor\Models\Doctor;
 
 class PostFactory extends Factory
 {
@@ -20,8 +21,9 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'doctor_id' => \Modules\Doctor\Models\Doctor::inRandomOrder()->first(),
-            'content' => $this->faker->paragraph,
+            'createdable_type' => Doctor::class,
+            'createdable_id' => Doctor::inRandomOrder()->first(),
+            'body' => $this->faker->paragraph,
         ];
     }
 }
