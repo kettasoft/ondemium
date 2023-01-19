@@ -11,6 +11,17 @@ use Modules\Post\Models\Post;
 
 class PostController extends Controller
 {
+
+    /**
+     * Display a listing of the posts for current logged in.
+     * @return ResponseJson
+     */
+    public function my()
+    {
+        $posts = auth()->user()->posts()->paginate(20);
+        return response()->json($posts);
+    }
+
     /**
      * Store a newly created resource in storage.
      * @param Request $request
