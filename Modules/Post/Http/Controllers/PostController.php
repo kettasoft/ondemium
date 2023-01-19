@@ -42,4 +42,23 @@ class PostController extends Controller
 
         return alert('An unknown error occurred', false, 402);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return ResponseJson
+     */
+    public function delete(int $id)
+    {
+        $originator = auth()->user();
+
+        $post = $originator->posts()->where('id', $id)->first();
+
+        if ($post) {
+            $post->delete();
+            return alert('The post was deleted successfully.');
+        }
+
+        return alert('An unknown error occurred', false, 402);
+    }
 }
