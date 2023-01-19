@@ -24,4 +24,22 @@ class PostController extends Controller
 
         return alert('The post was created successfully.');
     }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return ResponseJson
+     */
+    public function update(CreatePostRequest $request, int $id)
+    {
+        $originator = auth()->user();
+
+        if ($post = $originator->posts()->where('id', $id)->first()) {
+            $post->update($request->all());
+            return alert('The post was updated successfully.');
+        }
+
+        return alert('An unknown error occurred', false, 402);
+    }
 }
