@@ -13,6 +13,16 @@ class PostController extends Controller
 {
 
     /**
+     * Display a listing of the posts.
+     * @return Renderable
+     */
+    public function all()
+    {
+        $posts = Post::simplePaginate(30);
+        return response()->json($posts);
+    }
+
+    /**
      * Display a listing of the posts for current logged in.
      * @return ResponseJson
      */
