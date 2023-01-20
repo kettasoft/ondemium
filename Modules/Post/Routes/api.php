@@ -2,17 +2,19 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Post\Http\Controllers\PostController;
 
-// Access path to a post for a specific (user or doctor)
 
-Route::get('{created_id}/posts/{post_id?}', [PostController::class, 'show']);
+Route::controller(PostController::class)->group(function () {
+	// Access path to a post for a specific (user or doctor)
+	Route::get('{created_id}/posts/{post_id?}', 'show');
 
-Route::group(['middleware' => 'auth:sanctum'], function() {
-	Route::prefix('post')->group(function() {
-		Route::post('create', [PostController::class, 'create']);
-		Route::post('{id}/update', [PostController::class, 'update']);
-		Route::post('{id}/delete', [PostController::class, 'delete']);
+	Route::get('/posts', 'all');
+	Route::middleware('auth:sanctum')->group(function() {
+		Route::prefix('post')->group(function() {
+			Route::post('create', 'create');
+			Route::post('{id}/update', 'update');
+			Route::delete('{id}/delete', 'delete');
+		});
+		Route::get('/my-posts', 'my');
 	});
-	Route::get('/my-posts', [PostController::class, 'my']);
 });
