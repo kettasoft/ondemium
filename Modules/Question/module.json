@@ -1,0 +1,15 @@
+{
+    "name": "Question",
+    "alias": "question",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Question\\Providers\\QuestionServiceProvider",
+        "Modules\\Question\\Providers\\AuthServiceProvider",
+        "Modules\\Question\\Providers\\EventServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

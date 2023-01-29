@@ -60,6 +60,11 @@ class User extends Authenticatable
         return \Modules\User\Database\factories\UserFactory::new();
     }
 
+    public function questions()
+    {
+        return $this->morphMany(\Modules\Question\Models\Question::class, 'questionable');
+    }
+
     public function join()
     {
         // return $this->morphTo();

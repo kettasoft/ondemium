@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Laravel\Scout\Searchable;
-use App\Traits\Permissions;
+use App\Traits\Permission;
+use Modules\Post\Models\Post;
+use Modules\Device\Models\Device;
+use Modules\Comment\Models\Comment;
+use Modules\FollowSystem\Models\Follow;
+use App\Traits\Global\Models\Followable;
+use Modules\Clinic\Models\Clinic;
 
 class Doctor extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Searchable, Permissions;
+    use HasApiTokens, HasFactory, Notifiable, Searchable, Permission, Followable;
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +66,14 @@ class Doctor extends Authenticatable
         'plan_id' => 'integer'
     ];
 
+    protected $dates = [
+        'date_birth'
+    ];
+
+    protected $with = [
+        //
+    ];
+
     public function toSearchableArray()
     {
         return [
@@ -75,24 +89,9 @@ class Doctor extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
-    /**
-     * Converting permissions from JSON to an array.
-     *
-     * @return  string
-     */
-    public function getPermissionAttribute()
-    {
-        return json_decode($this->permissions, true);
-    }
-
-    public static function addPermission()
-    {
-
-    }
-
     public function posts()
     {
-        return $this->morphMany(\Modules\Post\Models\Post::class, 'createdable')->select('body', 'photos');
+        return $this->morphMany(Post::class, 'createdable')->select('id','body', 'photos');
     }
 
     public function device()
@@ -113,6 +112,11 @@ class Doctor extends Authenticatable
     public function join()
     {
         return $this->morphMany(\Modules\Group\Models\GroupMember::class, 'memberable');
+    }
+
+    public function questions()
+    {
+        return $this->morphMany(\Modules\Question\Models\Question::class, 'questionable');
     }
 
     protected static function newFactory()
