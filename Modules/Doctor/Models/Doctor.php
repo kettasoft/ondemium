@@ -89,6 +89,16 @@ class Doctor extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    /**
+     * Return the full name to the doctor
+     * @param string $separator = ' '
+     * @return string
+     * */
+    public function fullname($separator = ' '): string
+    {
+        return "{$this->first_name}{$separator}{$this->last_name}";
+    }
+
     public function posts()
     {
         return $this->morphMany(Post::class, 'createdable')->select('id','body', 'photos');
