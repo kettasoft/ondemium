@@ -2,17 +2,24 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::prefix('booking')->group(function () {
 
-Route::middleware('auth:api')->get('/booking', function (Request $request) {
-    return $request->user();
+    Route::middleware('auth:sanctum')->group(function () {
+        
+        Route::scopeBindings()->group(function () {
+            Route::post('clinic/{clinic}/doctor/{worker}/make', 'make'); // Make booking
+            Route::post('clinic/{clinic}/doctor/{worker}/cancel', 'cancel'); // Cancel Booking
+            Route::post('clinic/{clinic}/doctor/{worker}/update', 'update'); // Update Booking
+        });
+
+        Route::group(['prefix' => 'doctor', 'middleware' => 'doctor'], function () {
+            Route::get('total', 'totalBookingsMade');
+        });
+    });
+    Route::group(['prefix' => 'doctor'], function () {
+        Route::get('{doctor}/count', 'completedBookingsCount');
+    });
 });
+
+
+// api/1231/booking/make

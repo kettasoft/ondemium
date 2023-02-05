@@ -15,7 +15,7 @@ class CreateDevicesTable extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('ip_address');
             $table->string("user_agent");
             $table->boolean('status')->default(1);
@@ -23,7 +23,7 @@ class CreateDevicesTable extends Migration
             $table->timestamp('last_login');
             $table->timestamps();
 
-            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

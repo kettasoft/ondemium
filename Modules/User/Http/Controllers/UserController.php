@@ -10,6 +10,6 @@ class UserController extends Controller
 {
     public function get()
     {
-        return 'user';
+        return response()->json(auth()->user());
     }
 }

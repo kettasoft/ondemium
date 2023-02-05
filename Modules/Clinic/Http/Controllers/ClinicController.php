@@ -12,39 +12,32 @@ use Modules\Clinic\Models\Clinic;
 class ClinicController extends Controller
 {
 
-    public function get($username)
-    {
-        $clinic = Clinic::where('username', $username)->first();
-
-        if ($clinic) {
-            return response()->json(['data' => $clinic]);
-        }
-
-        return response()->json([
-            'message' => "Clinic '$username' is not found",
-        ], 404);
-    }
-
     public function create(ClinicCreateRequest $request)
     {
         $data = $request->all();
         $data['photo'] = '{}';
+        auth()->user()->clinic()->create($data);
         
-        Clinic::create($data);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Your clinic has been created successfully.'
-        ]);
+        return alert('Your clinic has been created successfully.');
     }
 
-    public function update()
+    public function update(ClinicCreateRequest $request, Clinic $clinic)
     {
-        //
+        if ($clinic->id === auth()->id()) {
+            $clinic->update($request->all());
+            return alert('Your clinic has been updated successfully.');
+        }
+
+        return alert('unauthorized', false, 402);
     }
 
-    public function delete()
+    public function delete(Clinic $clinic)
     {
-        //
+        if ($clinic->id === auth()->id()) {
+            $clinic->delete();
+            return alert('Your clinic has been deleted successfully');
+        }
+
+        return alert('unauthorized', false, 402);
     }
 }

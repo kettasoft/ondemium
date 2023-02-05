@@ -15,7 +15,7 @@ class CreateClinicsTable extends Migration
     {
         Schema::create('clinics', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('username', 15)->unique()->fulltext();
             $table->string('name', 50)->fulltext();
             $table->string('summary', 200)->nullable();
@@ -25,7 +25,7 @@ class CreateClinicsTable extends Migration
             $table->enum('clinic_type', ['general', 'especially'])->index();
             $table->timestamps();
 
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

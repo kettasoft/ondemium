@@ -2,19 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Doctor\Http\Controllers\DoctorController;
+use Modules\Booking\Http\Controllers\BookingController;
 
-Route::middleware('auth:sanctum')->group(function () {
-	Route::post('logout', function (Request $request) {
-		// $request->user()->currentAccessToken()->delete();
-		
-		dd($request->user()->currentAccessToken());
-	});
+Route::get('test', function () {
+	dd(\Auth::user());
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-	Route::get('test', function (Request $request) {
-		$doctor = $request->user();
-		dd($doctor->tokenCan('guard:doctor'));
+Route::controller(BookingController::class)->group(function () {
+	Route::prefix('{doctor}')->group(function () {
+	    Route::get('make', 'make');
+
+	    Route::get('count', 'totalCountOfBookings');
 	});
 });

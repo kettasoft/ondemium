@@ -39,11 +39,7 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
-        'doctor' => [
-            'driver' => 'session',
-            'provider' => 'doctors',
-        ],
+        ]
     ],
 
     /*
@@ -68,11 +64,6 @@ return [
             'driver' => 'eloquent',
             'model' => Modules\User\Models\User::class,
         ],
-
-        'doctors' => [
-            'driver' => 'eloquent',
-            'model' => Modules\Doctor\Models\Doctor::class,
-        ],
     ],
 
     /*
@@ -96,13 +87,7 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
-        ],
-        'doctors' => [
-            'provider' => 'doctors',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+        ]
     ],
 
     /*

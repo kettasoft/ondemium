@@ -5,7 +5,8 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "Modules\\Booking\\Providers\\BookingServiceProvider"
+        "Modules\\Booking\\Providers\\BookingServiceProvider",
+        "Modules\\Booking\\Providers\\AuthServiceProvider"
     ],
     "aliases": {},
     "files": [],

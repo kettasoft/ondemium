@@ -18,7 +18,7 @@ class Device extends Model
         'last_login',
     ];
 
-    public function doctor()
+    public function user()
     {
         return $this->hasMany(\Modules\Device\Models\Device::class);
     }

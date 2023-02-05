@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Modules\Post\Http\Requests\CreatePostRequest;
 use Modules\Post\Models\Post;
+use Modules\User\Models\User;
 
 
 class PostController extends Controller
@@ -48,6 +49,11 @@ class PostController extends Controller
         return response()->json($posts->where('id', $post_id)->first());
     }
 
+    public function get(User $user)
+    {
+        return response()->json($user->posts()->with('user')->simplePaginate(20));
+    }
+
     /**
      * Store a newly created resource in storage.
      * @param Request $request
@@ -59,12 +65,12 @@ class PostController extends Controller
 
         $originator->posts()->create($request->all());
 
-        return alert('The post was created successfully.');
+        return alert('The post was created successfully.', status:201);
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param CreatePostRequest $request
      * @param int $id
      * @return ResponseJson
      */

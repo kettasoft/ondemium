@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Observers\BookingObserver;
+use Modules\Booking\Models\Booking;
+
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Booking::observe(BookingObserver::class);
     }
 }

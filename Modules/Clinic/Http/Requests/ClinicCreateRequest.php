@@ -17,9 +17,9 @@ class ClinicCreateRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            'doctor_id' => ['required', 'integer', 'exists:doctors,id', 'in:' . $request->user()->id],
-            'username' => ['required', 'alpha', 'min:5', 'max:15', 'unique:clinic'],
-            'name' => ['required', 'alpha_num', 'min:1', 'max:50'],
+            // 'doctor_id' => ['required', 'integer', 'exists:doctors,id', 'in:' . $request->user()->id],
+            'username' => ['required', 'alpha', 'min:3', 'max:15', 'unique:clinics'],
+            'name' => ['required', 'string', 'min:1', 'max:50'],
             'summary' => ['nullable', 'string', 'max:200'],
             'clinic_type' => ['required', 'in:general,especially'],
         ];
@@ -32,9 +32,11 @@ class ClinicCreateRequest extends FormRequest
      */
     public function authorize(Request $request)
     {
-        $permissions = $request->user()->permissions;
+        // $permissions = $request->user()->permissions;
 
-        return permission($permissions, 'clinic.create');
+        // return permission($permissions, 'clinic.create');
+
+        return true;
     }
 
     public function failedValidation(Validator $validator)

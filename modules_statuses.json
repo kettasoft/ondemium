@@ -5,12 +5,17 @@
     "Education": true,
     "Plan": true,
     "Clinic": true,
-    "FollowSystem": true,
     "Device": true,
     "Setting": true,
     "Address": true,
     "Comment": true,
     "Group": true,
-    "Doctor": true,
-    "Booking": true
+    "Booking": true,
+    "Review": true,
+    "Question": true,
+    "Followable": true,
+    "Rule": true,
+    "Badge": true,
+    "Bookmark": true,
+    "Experience": true
 }

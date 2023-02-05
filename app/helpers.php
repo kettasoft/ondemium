@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Arr;
 
 if (!function_exists('permission')) {
 	function permission($permissions, $pattern = null)
@@ -12,7 +11,7 @@ if (!function_exists('permission')) {
 			$permissions = is_string($permissions) ? json_decode($permissions, true): $permissions;
 
 			if (is_array($permissions)) {
-				return (bool) Arr::get($permissions, $pattern);
+				return (bool) \Arr::get($permissions, $pattern);
 			}
 		}
 		return false;

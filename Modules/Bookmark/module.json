@@ -1,0 +1,13 @@
+{
+    "name": "Bookmark",
+    "alias": "bookmark",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Bookmark\\Providers\\BookmarkServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

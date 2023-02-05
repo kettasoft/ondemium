@@ -2,15 +2,13 @@
 
 namespace Modules\User\Http\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\RegisterRequest;
 use Modules\User\Models\User;
+use Modules\Rule\Models\Rule;
 
 class AuthController extends Controller
 {
@@ -35,14 +33,20 @@ class AuthController extends Controller
         }
     }
 
-    public function signup(RegisterRequest $request)
+    public function signup(RegisterRequest $request, string $type)
     {
         $data = $request->all();
         $data['photo'] = 'url';
 
+        if ($type != 'doctor') $type = 'user';
+
+        $rule = Rule::whereSlug($type)->first();
+
         $user = User::create($data);
 
-        $token = $user->createToken($data['phone'], ['user'])->plainTextToken;
+        $user->rules()->attach($rule);
+
+        $token = $user->createToken($data['first_name'])->plainTextToken;
 
         $success['name'] = $data['first_name'] . ' ' . $data['last_name'];
         $success['token'] = $token;

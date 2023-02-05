@@ -1,0 +1,13 @@
+{
+    "name": "Followable",
+    "alias": "followable",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Followable\\Providers\\FollowableServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

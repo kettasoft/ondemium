@@ -15,8 +15,11 @@ class CreateClinicPhotosTable extends Migration
     {
         Schema::create('clinic_photos', function (Blueprint $table) {
             $table->id();
-
+            $table->unsignedBigInteger('clinic_id');
+            $table->json('photos');
             $table->timestamps();
+
+            $table->foreign('clinic_id')->references('id')->on('clinics')->onDelete('cascade');
         });
     }
 

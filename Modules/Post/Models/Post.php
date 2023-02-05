@@ -5,6 +5,8 @@ namespace Modules\Post\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Comment\Models\Comment;
+use Modules\User\Models\User;
+use Modules\Bookmark\Models\Bookmark;
 
 use Modules\Doctor\Models\Doctor;
 
@@ -13,27 +15,28 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'photos',
         'body'
     ];
 
-    protected $hidden = [
-        'createdable_id',
-        'createdable_type'
-    ];
-
     protected $with = [
-        'comments'
+        // 'comments'
     ];
 
-    public function doctor()
+    public function user()
     {
-        return $this->morphTo(__FUNCTION__, 'createdable_type', 'createdable_id');
+        return $this->belongsTo(User::class);
     }
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function bookmark()
+    {
+        return $this->morphMany(Bookmark::class, 'bookmarkable');
     }
     
     protected static function newFactory()

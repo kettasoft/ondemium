@@ -15,7 +15,7 @@ class CreateEducationsTable extends Migration
     {
         Schema::create('educations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id')->unique();
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('education');
             $table->string('univerity', 32);
             $table->string('country');
@@ -26,7 +26,7 @@ class CreateEducationsTable extends Migration
             $table->boolean('is_verified')->default(0);
             $table->timestamps();
 
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

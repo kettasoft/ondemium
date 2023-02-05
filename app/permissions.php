@@ -33,4 +33,9 @@ return [
         'follow' => true,
         'like' => true
     ],
+
+    'booking' => [
+        'make' => true,
+        'cancel' => true
+    ]
 ];
