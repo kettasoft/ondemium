@@ -5,7 +5,7 @@ namespace Modules\User\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckIfDoctor
+class VerifyThePasswordForEveryRequestProcess
 {
     /**
      * Handle an incoming request.
@@ -16,14 +16,14 @@ class CheckIfDoctor
      */
     public function handle(Request $request, Closure $next)
     {
-        if (is_null($request->user())) {
-            return alert('unauthorized', false, 400);
-        }
-
-        if ($request->user()->rules->first()->slug === 'doctor') {
+        if (is_null(auth()->user())) return alert('unauthorized', false, 401);
+        if (! $request->get('password')) return alert('Password is required', false, 400);
+        
+        if (\Hash::check($request->password, auth()->user()->password)) {
             return $next($request);
         }
 
-        return alert('forbidden', false, 403);
+        return alert('The password is incorrect!', false, 400);
+
     }
 }

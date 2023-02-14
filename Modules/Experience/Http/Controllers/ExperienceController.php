@@ -2,78 +2,40 @@
 
 namespace Modules\Experience\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\User\Models\User;
+use Modules\Experience\Models\Experience;
+use Modules\Experience\Http\Requests\AddExperienceRequest;
 
 class ExperienceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    public function add(AddExperienceRequest $request)
     {
-        return view('experience::index');
+        if (auth()->user()->experiences()->create($request->all())) {
+            return alert('Your experience has been added successfully.', status:201);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function update(Experience $experience, User $doctor, AddExperienceRequest $request)
     {
-        return view('experience::create');
+        if (! $experience->is_verified) {
+            return alert('This experiment cannot be modified because it has been verified.', false, 400);
+        }
+
+        if ($experience->update($request->all())) {
+            return alert('Your experience has been added successfully.', status:201);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+    public function delete(Experience $experience, User $doctor)
     {
-        //
+        if ($experience->delete()) {
+            return alert('Your experience has been deleted successfully.');
+        }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
+    public function all(User $doctor)
     {
-        return view('experience::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('experience::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json($doctor->experiences()->whereIsAvailable(TRUE)->get());
     }
 }

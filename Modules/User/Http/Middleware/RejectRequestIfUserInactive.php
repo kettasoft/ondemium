@@ -5,7 +5,7 @@ namespace Modules\User\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckIfActiveAccount
+class RejectRequestIfUserInactive
 {
     /**
      * Handle an incoming request.
@@ -19,7 +19,7 @@ class CheckIfActiveAccount
         if (is_null($request->user())) {
             return alert('unauthorized', false, 400);
         }
-
+        
         if ($request->user()->status === TRUE) {
             return $next($request);
         }

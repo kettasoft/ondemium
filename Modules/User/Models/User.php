@@ -13,6 +13,8 @@ use Modules\Clinic\Models\Clinic;
 use Modules\Post\Models\Post;
 use Modules\Followable\Models\Followable;
 use Modules\Booking\Models\Booking;
+use Modules\Experience\Models\Experience;
+use Modules\Specialization\Models\Specialization;
 
 use Modules\Rule\Models\Rule;
 
@@ -55,6 +57,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'status' => 'boolean'
     ];
 
     protected $dates = [
@@ -113,6 +116,16 @@ class User extends Authenticatable
     public function followers()
     {
         return $this->belongsToMany($this, 'followables', 'following_id', 'follower_id');
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    public function specializations()
+    {
+        return $this->belongsToMany(Specialization::class);
     }
 
     protected static function newFactory()
