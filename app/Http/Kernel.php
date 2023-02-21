@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'doctor' => \Modules\User\Http\Middleware\CheckIfDoctor::class,
-        'active' => \Modules\User\Http\Middleware\CheckIfActiveAccount::class,
+        'active' => \Modules\User\Http\Middleware\RejectRequestIfUserInactive::class,
+        'password' => \Modules\User\Http\Middleware\VerifyThePasswordForEveryRequestProcess::class
     ];
 }
