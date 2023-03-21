@@ -1,5 +1,16 @@
 <?php
 
 return [
-    'name' => 'Setting'
+    'name' => 'Setting',
+
+    'doctor' => [
+        'notifications' => [
+            'follwer' => false,
+            ''
+        ]
+    ],
+
+    'user' => [
+
+    ]
 ];

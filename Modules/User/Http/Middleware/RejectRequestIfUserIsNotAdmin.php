@@ -16,12 +16,14 @@ class RejectRequestIfUserIsNotAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (is_null(auth()->user())) return alert('unauthorized', false, 401);
+        if (is_null(auth()->user())) return abort(UNAUTHORIZED);
 
-        if (auth()->user()->rules->first()->slug == 'admin') {
+        $rule = auth()->user()->rules->first();
+
+        if ($rule && $rule->slug == 'admin') {
             return $next($request);
         }
 
-        return alert('unauthorized', false, 401);
+        return abort(UNAUTHORIZED);
     }
 }

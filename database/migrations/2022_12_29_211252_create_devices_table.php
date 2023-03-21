@@ -16,14 +16,16 @@ class CreateDevicesTable extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('ip_address');
-            $table->string("user_agent");
-            $table->boolean('status')->default(1);
-            $table->timestamp('device_verified_at')->nullable();
-            $table->timestamp('last_login');
+            $table->json('permissions')->nullable();
+            $table->string('ip');
+            $table->string("agent");
+            $table->boolean('status')->default(0);
+            $table->boolean('is_primary')->default(0);
+            $table->timestamp('verified_at')->nullable();
+            $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -10,13 +10,14 @@
   let errors = ref('')
 
   const login = async() => {
-    axios.post('/api/user/auth/login', form).then(response => {
+    axios.post('/api/auth/login', form).then(response => {
       if (response.data.success) {
         window.localStorage.setItem('token', response.data.data.token);
       } else {
           errors.value = response.data.data
         }
     }).catch((error) => {
+      console.log(error.response);
       if (error.response.status === 402) {
         const Toast = Vue.swal.mixin({
           toast: true,

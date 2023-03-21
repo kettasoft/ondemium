@@ -1,6 +1,5 @@
 {
     "User": true,
-    "Blog": true,
     "Post": true,
     "Education": true,
     "Plan": true,
@@ -17,5 +16,21 @@
     "Rule": true,
     "Badge": true,
     "Bookmark": true,
-    "Experience": true
+    "Experience": true,
+    "Specialization": true,
+    "Pharmacy": true,
+    "Poll": true,
+    "Like": true,
+    "Hospital": true,
+    "Article": true,
+    "Account": true,
+    "Interaction": true,
+    "Access": true,
+    "Token": true,
+    "Payment": true,
+    "News": true,
+    "Phone": true,
+    "Product": true,
+    "Report": true,
+    "Career": true
 }

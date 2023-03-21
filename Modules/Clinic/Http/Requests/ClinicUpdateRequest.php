@@ -2,7 +2,11 @@
 
 namespace Modules\Clinic\Http\Requests;
 
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Modules\Clinic\Models\Clinic;
 
 class ClinicUpdateRequest extends FormRequest
 {
@@ -13,9 +17,7 @@ class ClinicUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return ClinicCreateRequest::rules();
     }
 
     /**
@@ -26,5 +28,14 @@ class ClinicUpdateRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ]));
     }
 }

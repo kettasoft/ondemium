@@ -25,7 +25,7 @@ class CreatePostRequest extends FormRequest
     {
         return [
             'body' => 'required_without:photos',
-            'photos' => 'required_without:body',
+            'photos' => ['required_without:body', 'image'],
         ];
     }
 

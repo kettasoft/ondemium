@@ -1,18 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use Modules\Address\Http\Controllers\AddressController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::group(['prefix' => 'addresses', 'where' => ['model' => AddressController::keys()]], function () {
+    Route::get('{model}/{username}/get', [AddressController::class, 'index']);
 
-Route::middleware('auth:api')->get('/address', function (Request $request) {
-    return $request->user();
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::post('{model}/{username}/create', [AddressController::class, 'create']);
+    });
 });

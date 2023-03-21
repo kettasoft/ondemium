@@ -4,7 +4,7 @@ namespace Modules\Question\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Question\Models\Question;
 use Modules\Question\Http\Requests\MakeQuestionRequest;
@@ -12,11 +12,6 @@ use Modules\Question\Http\Requests\AnswerToQuestionRequest;
 
 class QuestionController extends Controller
 {
-    private function question(int $id)
-    {
-        return auth()->user()->questions()->where('id', $id)->first();
-    }
-
     /**
      * Make a question
      * @param MakeQuestionRequest $request
@@ -29,38 +24,31 @@ class QuestionController extends Controller
         return alert('Your question has been added successfully, you will recive a reply from a specialized doctor.', status:201);
     }
 
-    public function update(MakeQuestionRequest $request, $question_id)
+    public function update(MakeQuestionRequest $request, Question $question)
     {
-        $question = $this->question($question_id);
-        if (Gate::allows('HeHasThePowerToQuestion', $question)) {
-            $question->update($request->all());
-            return alert('Youe question has been updated successfully.');
-        }
+        $this->authorize('update', $question);
 
-        return alert('unauthorized', false, 401);
+        $question->update($request->all());
+        return alert('Youe question has been updated successfully.');
     }
 
     /**
      * Delete question
-     * @param int $question_id
+     * @param Question $question
      * @return ResponseJson
      * */
-    public function delete(int $question_id)
+    public function delete(Question $question)
     {
-        $question = auth()->user()->questions()->where('id', $question_id)->first();
-
-        if (!$question) {
-            return alert('Faild operation', false, 400);
-        }
+        $this->authorize('delete', $question);
 
         $question->delete();
 
         return alert('Your question has been cleared successfully.');
     }
 
-    public function show(int $question_id)
+    public function show(Question $question)
     {
-        return response()->json(Question::find($question_id));
+        return response()->json($question);
     }
 
     public function all()

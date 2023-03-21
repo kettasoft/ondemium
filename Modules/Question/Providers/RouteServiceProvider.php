@@ -63,7 +63,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware('api')
-            ->controller('QuestionController')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Question', '/Routes/api.php'));
     }

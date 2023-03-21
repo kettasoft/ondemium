@@ -2,15 +2,15 @@
 
 namespace Modules\Rule\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Modules\Rule\Http\Requests\CreateNewRuleRequest;
+use App\Http\Controllers\Controller;
+use Modules\Rule\Models\Rule;
 
 class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
     public function index()
     {
@@ -19,61 +19,49 @@ class RuleController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     * @param CreateNewRuleRequest $request
+     * @return JsonResponse
      */
-    public function create()
+    public function create(CreateNewRuleRequest $request)
     {
-        return view('rule::create');
-    }
+        dd('dsa');
+        Rule::create($request->all());
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
+        return alert('The rule has been created successfully.', status:CREATED);
     }
 
     /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param Rule $rule
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(Rule $rule)
     {
-        return view('rule::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('rule::edit');
+        return response()->json($rule->with('users')->first());
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param CreateNewRuleRequest $request
+     * @param Rule $rule
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Rule $rule, CreateNewRuleRequest $request)
     {
-        //
+        if ($rule->update($request->all())) {
+            return alert('The rule has been updated successfully.');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param Rule $rule
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function delete(Rule $rule)
     {
-        //
+        if ($rule->delete()) {
+            return alert('The rule has been deleted successfully.');
+        }
     }
 }

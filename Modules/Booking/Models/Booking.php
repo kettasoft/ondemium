@@ -15,29 +15,19 @@ class Booking extends Model
 
     protected $guarded = [];
 
-    public function patient()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function doctor()
+    public function bookable()
     {
-        return $this->belongsTo(User::class, 'doctor_id');
-    }
-
-    public function clinic()
-    {
-        return $this->belongsTo(Clinic::class, 'clinic_id');
+        return $this->morphTo();
     }
 
     public function today()
     {
-        return this->where('created_at', '>=', \Carbon\Carbon::now());
-    }
-
-    public function settings()
-    {
-        return $this->hasOne(\Modules\Booking\Models\Setting::class);
+        return this->where('created_at', '>=', \Carbon\Carbon::now())->get();
     }
     
     protected static function newFactory()

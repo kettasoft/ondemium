@@ -8,6 +8,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Arr,
+    Illuminate\Support\Str;
+
+use App\Traits\Global\Models\IsDoctor;
 
 use Modules\Clinic\Models\Clinic;
 use Modules\Post\Models\Post;
@@ -15,12 +19,21 @@ use Modules\Followable\Models\Followable;
 use Modules\Booking\Models\Booking;
 use Modules\Experience\Models\Experience;
 use Modules\Specialization\Models\Specialization;
+use Modules\Device\Models\Device;
+use Modules\Setting\Models\Setting;
+use Modules\Plan\Models\Plan;
+use Modules\Question\Models\Question;
+use Modules\Poll\Models\Poll;
+use Modules\Pharmacy\Models\Pharmacy;
+
+use Modules\Token\Models\Agent,
+    Modules\Token\Models\Token;
 
 use Modules\Rule\Models\Rule;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, IsDoctor;
 
     protected $table = 'users';
 
@@ -56,7 +69,6 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'status' => 'boolean'
     ];
 
@@ -64,33 +76,44 @@ class User extends Authenticatable
         'date_birth'
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'username';
+    }
+
+    public function selete($keys = [])
+    {
+        return $this->first($keys);
+    }
+
+    public function simple($keys = ['id', 'first_name', 'last_name', 'photo', 'account_verified_at'])
+    {
+        return $this->selete($keys);
+    }
+
     public function fullname($separator = ' '): string
     {
         return "{$this->first_name}{$separator}{$this->last_name}";
     }
 
-    // public function setPasswordAttribute(string $value)
-    // {
-    //     $this->attributes['password'] = bcrypt($value);
-    // }
+    public function settings()
+    {
+        return $this->hasOne(Setting::class);
+    }
 
-    public function clinic()
+    public function setPasswordAttribute(string $value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function getPhotoAttribute(string $value)
+    {
+        return avatar_path($value);
+    }
+
+    public function clinics()
     {
         return $this->hasMany(Clinic::class);
-    }
-
-    public function bookings(string $type = 'user_id')
-    {
-        return $this->hasMany(Booking::class, $type);
-    }
-
-    public function checkIfDoesntHaveBooking(int $clinic_id, int $doctor_id, $date, bool $done = false)
-    {
-        return $this->bookings()
-        ->whereClinicId($clinic_id)
-        ->whereDoctorId($doctor_id)
-        ->whereBookingDate($date)
-        ->whereIsDone($done)->first();
     }
 
     public function posts()
@@ -105,7 +128,7 @@ class User extends Authenticatable
 
     public function questions()
     {
-        return $this->morphMany(\Modules\Question\Models\Question::class, 'questionable');
+        return $this->hasMany(Question::class);
     }
 
     public function following()
@@ -126,6 +149,69 @@ class User extends Authenticatable
     public function specializations()
     {
         return $this->belongsToMany(Specialization::class);
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
+
+    public function myTokens()
+    {
+        return $this->hasMany(Token::class);
+    }
+
+    public function agents($table = 'parent_id')
+    {
+        return $this->hasMany(Agent::class, $table);
+    }
+
+    public function workers()
+    {
+        return $this->agents('agent_id');
+    }
+
+    public function pharmacy()
+    {
+        return $this->hasOne(Pharmacy::class);
+    }
+
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
+
+    public function polls()
+    {
+        return $this->hasMany(Poll::class);
+    }
+
+    /**
+     * Determine if the token has a given ability.
+     *
+     * @param  string  $ability
+     * @return bool
+     */
+    public function ability($ability, $only = null)
+    {
+        $currentAccessToken = $this->currentAccessToken();
+
+        if ($currentAccessToken->name == 'primary') {
+            return true;
+        }
+
+        $abilities = $currentAccessToken->abilities;
+
+        if ($arr = Arr::get($abilities, "$ability.only")) {
+            dd(Arr::get($arr, "$only"));
+        }
+
+        return Arr::get($abilities, $ability);
+    }
+
+    public function getTokenName()
+    {
+        return $this->currentAccessToken()->name;
     }
 
     protected static function newFactory()

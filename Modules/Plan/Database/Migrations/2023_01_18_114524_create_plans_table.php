@@ -15,16 +15,13 @@ class CreatePlansTable extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->string('slug');
             $table->string('name');
-            $table->enum('duration', ['monthly', 'yearly']);
-            $table->integer('booking_limit');
-            $table->integer('group_limit');
-            $table->integer('clinic_limit');
-            $table->integer('hospital_limit');
+            $table->enum('duration', ['monthly', 'yearly', 'lifetime']);
+            $table->float('price')->nullable();
+            $table->text('description')->nullable();
+            $table->json('privileges')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

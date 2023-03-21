@@ -1,0 +1,13 @@
+{
+    "name": "Token",
+    "alias": "token",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Token\\Providers\\TokenServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

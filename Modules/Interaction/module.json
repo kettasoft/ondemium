@@ -1,0 +1,13 @@
+{
+    "name": "Interaction",
+    "alias": "interaction",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Interaction\\Providers\\InteractionServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,11 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Doctor\Models\Doctor;
+use Modules\Device\Events\FlushExpiredCodeDeviceVerify;
+use Modules\Pharmacy\Models\Pharmacy;
 use Modules\User\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Modules\User\Events\Registered;
 
-// 'SELECT * FROM doctors JOIN followers ON followers.doctor_id = doctors.id'
+Route::get('test', function () {
 
-Route::get('/', function () {
+    dd(cache());
+
 });
+
+Route::get('/', \App\Http\Controllers\AppController::class);

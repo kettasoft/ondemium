@@ -63,6 +63,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware('api')
+            ->controller('PostController')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Post', '/Routes/api.php'));
     }

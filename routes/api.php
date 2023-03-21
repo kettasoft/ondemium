@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Route;
 use Modules\Booking\Http\Controllers\BookingController;
 
 Route::get('test', function () {
-	dd(\Auth::user());
+	Route::middleware('auth:sanctum')->group(function () {
+		dd(auth()->user());
+	});
+	dd(request()->header('User-Agent'));
 });
 
 Route::controller(BookingController::class)->group(function () {

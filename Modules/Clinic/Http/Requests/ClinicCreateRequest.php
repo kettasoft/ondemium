@@ -2,10 +2,12 @@
 
 namespace Modules\Clinic\Http\Requests;
 
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Modules\Clinic\Models\Clinic;
 
 class ClinicCreateRequest extends FormRequest
 {
@@ -14,10 +16,9 @@ class ClinicCreateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(Request $request)
+    public static function rules()
     {
         return [
-            // 'doctor_id' => ['required', 'integer', 'exists:doctors,id', 'in:' . $request->user()->id],
             'username' => ['required', 'alpha', 'min:3', 'max:15', 'unique:clinics'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
             'summary' => ['nullable', 'string', 'max:200'],
@@ -30,13 +31,9 @@ class ClinicCreateRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize(Request $request)
+    public function authorize()
     {
-        // $permissions = $request->user()->permissions;
-
-        // return permission($permissions, 'clinic.create');
-
-        return true;
+        return app(Gate::class)->allows('create', Clinic::class);
     }
 
     public function failedValidation(Validator $validator)
@@ -51,7 +48,7 @@ class ClinicCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'doctor_id.in' => 'Sorry, you cannot preform this operation'
+            //
         ];
     }
 }

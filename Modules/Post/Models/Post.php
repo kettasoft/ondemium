@@ -4,25 +4,17 @@ namespace Modules\Post\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Modules\Comment\Models\Comment;
 use Modules\User\Models\User;
 use Modules\Bookmark\Models\Bookmark;
-
-use Modules\Doctor\Models\Doctor;
+use Modules\Interaction\Models\Interaction;
 
 class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'photos',
-        'body'
-    ];
-
-    protected $with = [
-        // 'comments'
-    ];
+    protected $guarded = [];
 
     public function user()
     {
@@ -34,13 +26,13 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class);
+    }
+
     public function bookmark()
     {
         return $this->morphMany(Bookmark::class, 'bookmarkable');
-    }
-    
-    protected static function newFactory()
-    {
-        return \Modules\Post\Database\factories\PostFactory::new();
     }
 }

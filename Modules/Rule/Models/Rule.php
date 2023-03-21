@@ -4,15 +4,16 @@ namespace Modules\Rule\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\User\Models\User;
 
 class Rule extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
+    protected $guarded = [];
+
+    public function users()
     {
-        return \Modules\Rule\Database\factories\RuleFactory::new();
+        return $this->belongsToMany(User::class);
     }
 }

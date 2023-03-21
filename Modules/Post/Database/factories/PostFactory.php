@@ -2,7 +2,7 @@
 namespace Modules\Post\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Doctor\Models\Doctor;
+use Modules\User\Models\User;
 
 class PostFactory extends Factory
 {
@@ -21,9 +21,9 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'createdable_type' => Doctor::class,
-            'createdable_id' => Doctor::inRandomOrder()->first(),
+            'user_id' => User::inRandomOrder()->first(),
             'body' => $this->faker->paragraph,
+            'commentable' => rand(0,1)
         ];
     }
 }

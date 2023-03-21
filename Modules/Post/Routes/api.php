@@ -3,16 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/posts', 'all');
+Route::get('user/{user}/posts', 'get');
 
-Route::controller(PostController::class)->group(function () {
-	Route::get('/posts', 'all');
-	Route::get('user/{user}/posts', 'get');
-	Route::middleware('auth:sanctum')->group(function() {
-		Route::prefix('post')->group(function() {
-			Route::post('create', 'create');
-			Route::post('{id}/update', 'update');
-			Route::delete('{id}/delete', 'delete');
-		});
-		Route::get('/my-posts', 'my');
+Route::group(['middleware' => ['auth:sanctum', 'active'], 'prefix' => 'posts'], function() {
+	Route::post('create', 'create');//->middleware('throttle:5,60');
+
+	Route::scopeBindings()->group(function () {
+		Route::post('{user}/{post}/update', 'update');
+		Route::delete('{user}/{post}/delete', 'delete');
 	});
 });

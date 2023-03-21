@@ -1,0 +1,13 @@
+{
+    "name": "Hospital",
+    "alias": "hospital",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Hospital\\Providers\\HospitalServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

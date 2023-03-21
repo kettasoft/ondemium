@@ -3,36 +3,22 @@
 namespace Modules\Clinic\Models;
 
 use Laravel\Scout\Searchable;
-use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Booking\Models\Setting;
+use App\Traits\Global\Models\Reviewable,
+    App\Traits\Global\Models\Reportable;
+
+use Modules\Booking\Models\Setting,
+    Modules\User\Models\User,
+    Modules\Address\Models\Address,
+    Modules\Phone\Models\Phone,
+    Modules\Booking\Models\Booking;
 
 class Clinic extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory, Searchable, Reviewable, Reportable;
 
-    protected $table = 'clinics';
-
-    protected $fillable = [
-        'doctor_id',
-        'username',
-        'name',
-        'summary',
-        'photo',
-        'banner',
-        'clinic_type',
-        'status',
-    ];
-
-    protected $casts = [
-        'id' => 'integer',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $guarded = [];
 
     private const WITH_PIVOT = [
         'saturday',
@@ -44,6 +30,8 @@ class Clinic extends Model
         'sunday',
         'permissions',
         'conditions',
+        'is_available',
+        'status'
     ];
 
     public function toSearchableArray()
@@ -51,7 +39,6 @@ class Clinic extends Model
         return [
             'username' => $this->username,
             'name' => $this->name,
-            'status' => $this->status,
             'clinic_type' => $this->clinic_type
         ];
     }
@@ -59,6 +46,20 @@ class Clinic extends Model
     public function getRouteKeyName()
     {
         return 'username';
+    }
+
+    /**
+     * Return all the addresses woh belong to the clinci
+     * @return morphMany
+     */
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function originator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function setting()
@@ -69,20 +70,24 @@ class Clinic extends Model
     /**
      * Return all the doctors woh belong to the clinci
      * @return belongsToMany
-     * */
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
-
-    public function hasDoctor(int $id)
-    {
-        return $this->doctors()->where('doctor_id', $id)->first();
-    }
-
-    public function workers()
+     */
+    public function doctors()
     {
         return $this->belongsToMany(User::class)->withPivot(self::WITH_PIVOT);
+    }
+
+    /**
+     * Return all the phone numbers woh belong to the clinci
+     * @return morphMany
+     */
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function bookings()
+    {
+        return $this->morphMany(Booking::class, 'bookable');
     }
 
     protected static function newFactory()

@@ -1,15 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-
 Route::prefix('booking')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
-        
-        Route::scopeBindings()->group(function () {
-            Route::post('clinic/{clinic}/doctor/{worker}/make', 'make'); // Make booking
-            Route::post('clinic/{clinic}/doctor/{worker}/cancel', 'cancel'); // Cancel Booking
-            Route::post('clinic/{clinic}/doctor/{worker}/update', 'update'); // Update Booking
+    
+        Route::group(['where' => ['model' => 'clinic|hospital']], function () {
+            Route::post('{model}/{username}/doctor/{doctor}/make', 'create'); // Make booking
+            Route::post('{model}/{username}/cancel', 'delete'); // Cancel Booking
+            Route::post('{model}/{username}/doctor/{doctor}/update', 'update'); // Update Booking
         });
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'doctor'], function () {

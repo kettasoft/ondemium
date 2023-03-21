@@ -14,10 +14,7 @@ class BookingObserver
      */
     public function created(Booking $booking)
     {
-        dump(['instanse' => $booking]);
-        dump(['doctor' => $booking->doctor]);
-        dump(['clinic' => $booking->clinic]);
-        dump(['patient' => $booking->patient]);
+        //
     }
 
     /**

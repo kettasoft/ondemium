@@ -31,13 +31,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              axios.post('/api/user/auth/login', form).then(function (response) {
+              axios.post('/api/auth/login', form).then(function (response) {
                 if (response.data.success) {
                   window.localStorage.setItem('token', response.data.data.token);
                 } else {
                   errors.value = response.data.data;
                 }
               })["catch"](function (error) {
+                console.log(error.response);
                 if (error.response.status === 402) {
                   var Toast = Vue.swal.mixin({
                     toast: true,

@@ -16,11 +16,15 @@ class CheckIfDoctor
      */
     public function handle(Request $request, Closure $next)
     {
+        $slug = $request->user()->rules->first()->slug;
         if (is_null($request->user())) {
-            return alert('unauthorized', false, 400);
+            abort(400);
         }
-
-        if ($request->user()->rules->first()->slug === 'doctor') {
+        if (!$request->user()->rules->first()) {
+            abort(401);
+        }
+        
+        if ($slug === 'doctor' || $slug === 'admin') {
             return $next($request);
         }
 

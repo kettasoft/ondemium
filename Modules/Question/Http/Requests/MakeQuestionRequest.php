@@ -23,7 +23,8 @@ class MakeQuestionRequest extends FormRequest
             'description' => ['required', 'min:1', 'max:250'],
             'whom' => ['required', 'in:'.self::MYSELF.',' . self::SOMEONE . ''],
             'gender' => ['required', 'in:male,female'],
-            'age' => 'required|integer|min:1|max:99'
+            'age' => 'required|integer|min:1|max:99',
+            'is_multi_answer' => ['required', 'boolean']
         ];
     }
 

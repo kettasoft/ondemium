@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ApiMiddleware::class,
+            // \Modules\User\Http\Middleware\CheckIfHasCapabilitiesToRequest::class
         ],
     ];
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'active' => \Modules\User\Http\Middleware\RejectRequestIfUserInactive::class,
         'password' => \Modules\User\Http\Middleware\VerifyThePasswordForEveryRequestProcess::class,
         'admin' => \Modules\User\Http\Middleware\RejectRequestIfUserIsNotAdmin::class,
+        'rules' => \App\Http\Middleware\CheckIfHasRules::class
     ];
 }

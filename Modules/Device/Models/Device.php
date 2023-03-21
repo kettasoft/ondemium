@@ -9,18 +9,16 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'doctor_id',
-        'ip_address',
-        'user_agent',
-        'device_verified_at',
-        'status',
-        'last_login',
-    ];
+    protected $guarded = [];
 
     public function user()
     {
         return $this->hasMany(\Modules\Device\Models\Device::class);
+    }
+
+    public function verify()
+    {
+        return $this->hasOne(VerifyDevice::class);
     }
     
     protected static function newFactory()

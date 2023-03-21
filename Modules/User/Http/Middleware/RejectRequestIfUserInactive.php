@@ -24,6 +24,6 @@ class RejectRequestIfUserInactive
             return $next($request);
         }
 
-        return alert("Your account is now suspended due to a violtion of {".env('APP_NAME')."}", false, '401');
+        return alert("Your account is now suspended due to a violtion of {".env('APP_NAME')."}", false, 401);
     }
 }

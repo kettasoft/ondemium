@@ -19,9 +19,9 @@ class CreateClinicsTable extends Migration
             $table->string('username', 15)->unique()->fulltext();
             $table->string('name', 50)->fulltext();
             $table->string('summary', 200)->nullable();
-            $table->string('photo');
+            $table->string('logo');
             $table->string('banner')->nullable();
-            $table->enum('status', ['active', 'ban'])->default('active');
+            $table->boolean('status')->default(1);
             $table->enum('clinic_type', ['general', 'especially'])->index();
             $table->timestamps();
 

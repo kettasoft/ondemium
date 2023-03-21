@@ -2,24 +2,22 @@
 
 return [
     'account' => [
-        
-    ],
-
-    'education' => [
         'update' => true
     ],
 
-    'group' => [
+    'education' => [
         'create' => true,
-        'delete' => true,
         'update' => true,
-        'activities' => true
+        'delete' => true,
     ],
 
     'clinic' => [
+        'only' => [
+            '@helthy' => ['show' => true, 'delete' => true, 'update' => true, 'address' => true],
+        ],
         'create' => true,
-        'update' => true,
-        'delete' => true
+        'delete' => true,
+        'show' => true,
     ],
 
     'post' => [
@@ -37,5 +35,28 @@ return [
     'booking' => [
         'make' => true,
         'cancel' => true
+    ],
+
+    'access' => [
+        'create' => true,
+        'delete' => true,
+        'update' => true,
+        'show' => true
+    ],
+
+    'article' => [
+        'create' => true,
+        'delete' => true,
+        'update' => true,
+        'show' => true,
+    ],
+
+    'group' => [
+        'create' => true,
+        'activities' => true
+    ],
+
+    'interactions' => [
+
     ]
 ];

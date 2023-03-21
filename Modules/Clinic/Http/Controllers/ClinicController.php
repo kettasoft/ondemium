@@ -2,42 +2,79 @@
 
 namespace Modules\Clinic\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Modules\Clinic\Http\Requests\ClinicCreateRequest;
 use Modules\Clinic\Http\Requests\ClinicUpdateRequest;
 use Modules\Clinic\Models\Clinic;
+use Modules\User\Models\User;
 
 class ClinicController extends Controller
 {
 
+    public function all()
+    {
+        return response()->json(Clinic::whereStatus(1)->simplePaginate(50));
+    }
+
+    public function get(User $doctor, Clinic $clinic)
+    {
+        return response()->json([
+            'data' => [
+                'doctor' => $doctor->simple(),
+                'clinic' => $clinic
+            ]
+        ]);
+    }
+
+    public function show(User $doctor)
+    {
+    }
+
     public function create(ClinicCreateRequest $request)
     {
         $data = $request->all();
-        $data['photo'] = '{}';
-        auth()->user()->clinic()->create($data);
+        $data['logo'] = '{}';
+        auth()->user()->clinics()->create($data);
         
-        return alert('Your clinic has been created successfully.');
+        return alert('Your clinic has been created successfully.', status:CREATED);
     }
 
-    public function update(ClinicCreateRequest $request, Clinic $clinic)
+    public function update(User $doctor, Clinic $clinic, ClinicUpdateRequest $request)
     {
-        if ($clinic->id === auth()->id()) {
-            $clinic->update($request->all());
+        $this->authorize('update', $clinic);
+
+        if ($clinic->update($request->all())) {
             return alert('Your clinic has been updated successfully.');
         }
-
-        return alert('unauthorized', false, 402);
     }
 
-    public function delete(Clinic $clinic)
+    public function delete(User $doctor, Clinic $clinic)
     {
-        if ($clinic->id === auth()->id()) {
-            $clinic->delete();
+        $this->authorize('delete', $clinic);
+        
+        if ($clinic->delete()) {
             return alert('Your clinic has been deleted successfully');
         }
+    }
 
-        return alert('unauthorized', false, 402);
+    public function setStatus(Clinic $clinic, $setStatus)
+    {
+        $this->authorize('setStatus', $clinic);
+        
+        $status = match ($setStatus) {
+            'ban' => $clinic->update(['status' => $setStatus]),
+            'active' => $clinic->update(['status' => $setStatus]),
+        };
+
+        if ($status) {
+            return alert('successfully');
+        }
+    }
+
+    public function allUnactiveClinics()
+    {
+        $clinics = Clinic::whereStatus('ban')->with('originator')->simplePaginate(20);
+
+        return response()->json($clinics);
     }
 }

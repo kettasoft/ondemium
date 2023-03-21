@@ -1,0 +1,23 @@
+{
+    "name": "kettasoft/career",
+    "description": "",
+    "authors": [
+        {
+            "name": "Abdalrhman Emad Saad",
+            "email": "kettasoft@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Career\\": ""
+        }
+    }
+}

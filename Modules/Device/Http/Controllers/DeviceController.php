@@ -2,78 +2,37 @@
 
 namespace Modules\Device\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Device\Models\VerifyDevice;
+use Modules\Device\Models\Device;
+use Modules\User\Models\User;
 
 class DeviceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('device::index');
-    }
+    private Device $device;
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function __construct(Request $request)
     {
-        return view('device::create');
-    }
+        $this->device = Device::whereIp($request->ip())->first() ?? new Device;
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
+        if (!$this->device->verify) {
+            abort(404);
+        }
     }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
+    public function verify(Request $request)
     {
-        return view('device::show');
-    }
+        $device = $this->device;
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('device::edit');
-    }
+        if ($device->verify->code == $request->code) {
+            $user = User::find($device->user_id);
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+            if ($device->verify->delete()) {
+                $token = $user->createToken('primary')->plainTextToken;
+                return response()->json(['token' => $token], 201);
+            }
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        return alert('Code is incorrect', false, 400);
     }
 }

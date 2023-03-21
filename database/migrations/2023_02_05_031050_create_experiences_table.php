@@ -29,7 +29,7 @@ class CreateExperiencesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('clinic_username')->references('username')->on('clinics')->onDelete('cascade');
+            $table->foreign('clinic_username')->references('username')->on('clinics');
         });
     }
 

@@ -2,78 +2,69 @@
 
 namespace Modules\Plan\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Illuminate\Http\JsonResponse;
+use Modules\Plan\Models\Plan;
+use Modules\User\Models\User;
+use Modules\Plan\Http\Requests\CreateNewPlanRequest;
+use App\Http\Controllers\Controller;
 
 class PlanController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Renderable
+     * Display a listing of the plans.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return view('plan::index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('plan::create');
+        return response()->json(Plan::paginate());
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function create(CreateNewPlanRequest $request): JsonResponse
     {
-        //
+        Plan::create($request->all());
+
+        return alert('New plan has been added to website sccessfully', status:CREATED);
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Update the specified plan in storage.
+     * @param Plan $plan
+     * @param CreateNewPlanRequest $request
+     * @return JsonResponse
      */
-    public function show($id)
+    public function update(Plan $plan, CreateNewPlanRequest $request): JsonResponse
     {
-        return view('plan::show');
+        $name = $plan->name;
+        if ($plan->update($request->all())) {
+            return alert("The plan {$name} has been renamed to $plan->name updated successfully");
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Remove the specified plan from storage.
+     * @param plan $plan
+     * @return plan
      */
-    public function edit($id)
+    public function delete(Plan $plan): JsonResponse
     {
-        return view('plan::edit');
+        $name = $plan->name;
+
+        if ($plan->delete()) {
+            return alert("The plan {$name} has been deleted successfully.");
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
+    public function pay(User $user, Plan $plan)
     {
-        //
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function attach(User $user, Plan $plan)
     {
-        //
+
     }
 }

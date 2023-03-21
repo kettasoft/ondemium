@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 
 Route::controller(SpecializationController::class)->group(function () {
     Route::prefix('specialization')->group(function () {
-        Route::middleware(['auth:sanctum', /*'admin'*/])->group(function () {
+        Route::middleware(['auth:sanctum', 'admin'])->group(function () {
             Route::post('add', 'addSpecializationToWebsite');
             Route::post('{slug}/remove', 'removeSpecializationFromWebsite');
             Route::post('{specialization}/update', 'updateSpecialization');

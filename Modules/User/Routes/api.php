@@ -12,5 +12,5 @@ Route::group(['prefix' => 'auth'], function () {
     });
 
     Route::post('login', LoginController::class);
-    Route::post('{type}/signup', RegisterController::class);
+    Route::post('{type}/signup', RegisterController::class)->where('type', 'user|doctor');//->middleware('throttle:1,1');
 });

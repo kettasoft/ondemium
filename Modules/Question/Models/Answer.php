@@ -4,7 +4,8 @@ namespace Modules\Question\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Doctor\Models\Doctor;
+use Modules\User\Models\User;
+use Modules\Question\Models\Question;
 
 class Answer extends Model
 {
@@ -14,12 +15,17 @@ class Answer extends Model
     protected $hidden = ['doctor_id', 'question_id'];
 
     protected $with = [
-        'doctor:id,username,first_name,last_name,photo,is_verified'
+        'doctor:id,username,first_name,last_name,photo,account_verified_at'
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
 
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     
     protected static function newFactory()

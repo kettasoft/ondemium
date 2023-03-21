@@ -10,11 +10,13 @@ class LogoutController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth:sanctum');
     }
 
     public function __invoke()
     {
-        //
+        if (auth()->user()->currentAccessToken()->delete()) {
+            return alert('logout');
+        }
     }
 }

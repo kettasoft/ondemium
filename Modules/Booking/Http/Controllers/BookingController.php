@@ -3,17 +3,20 @@
 namespace Modules\Booking\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Routing\Controller;
-use Illuminate\Http\ResponseJson;
-use Modules\User\Models\User;
-use Modules\Clinic\Models\Clinic;
-use Modules\Booking\Http\Requests\MakeBookingRequest;
-use Modules\Booking\Http\Requests\CancelBookingRequest;
-use Modules\Booking\Http\Requests\UpdateBookingRequest;
-use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Traits\Global\Helpers\Modelable;
+
+use Modules\User\Models\User,
+    Modules\Clinic\Models\Clinic;
+
+use Modules\Booking\Http\Requests\MakeBookingRequest,
+    Modules\Booking\Http\Requests\CancelBookingRequest,
+    Modules\Booking\Http\Requests\UpdateBookingRequest;
 
 class BookingController extends Controller
 {
+    use Modelable;
 
     private $now;
 
@@ -22,72 +25,60 @@ class BookingController extends Controller
         $this->now = now()->format('Y-m-d');
     }
 
+    public static function instances()
+    {
+        return config('booking.models');
+    }
+
     /**
      * Make a pre-booking for the doctor
      * @param Clinic $Clinic
      * @param User $worker
      * @return ResponseJson
-     * ->update(['conditions' => json_encode(['less_age' => '2003-90-15', 'older_age' => '1990-09-15'])])
-     * */
-    public function make(Clinic $clinic, User $worker, MakeBookingRequest $request): ResponseJson
+     */
+    public function create($model, $username, $doctor, MakeBookingRequest $request): JsonResponse
     {
-        // Refusing to book in the event that the doctor has booked self
-        if ($worker->id === auth()->id()) return alert('Bad request', false, 400);
+        $fundation = $this->model($model)->whereUsername($username)->firstOrFail();
+
+        $doctor = $fundation->doctors()->whereUsername($doctor)->firstOrFail();
+
+        $setting = $doctor->pivot;
 
         // Get the name of the day to be booked
         $date = strtolower(now()->parse($request->date)->format('l'));
 
+        if (!$setting->is_available && !$setting->status) {
+            return alert("Sorry, Dr {$doctor->fullname()} is not available now.", false, BAD_REQUEST);
+        }
+
         // Detemrine whether this day is available for the doctor to work or not
-        if (is_null($worker->pivot->$date)) {
-            return alert("Sorry, Dr. {$worker->fullname()} is not available on this day. Please book another day", false, 400);
+        if (!$setting->$date) {
+            return alert("Sorry, Dr {$doctor->fullname()} is not available to day. Please book another day.", false, BAD_REQUEST);
         }
 
-        $conditions = json_decode($worker->pivot->conditions, true);
+        // Refusing to book in the event that the doctor has booked self
+        if ($doctor->id === auth()->id()) abort(404);
 
-        if (!is_null($conditions)) {
-            $date_birth = auth()->user()->date_birth;
-            $older = Carbon::parse($conditions['older_age']);
-            $less = Carbon::parse($conditions['less_age']);
-
-            if (! (is_null($conditions['older_age']) && is_null($conditions['less_age']))) {
-                if (! $date_birth->between($less, $older)) {
-                    return alert("Sorry, you cannot book with Dr. {$worker->fullname()}", false, 400);
-                }
-            }
+        if ($isBooking = $fundation->bookings()->whereUserId(auth()->id())->where('date', $request->date)->first()) {
+            return alert("You have already booked with Dr. {$doctor->fullname()} in the {$fundation->name} {$model}, and it is your {$isBooking->turn} turn", false, 400);
         }
 
-        if ($booking = auth()->user()->checkIfDoesntHaveBooking($clinic->id, $worker->id, $request->date)) {
-            return alert("You have already booked with Dr. {$worker->fullname()} in the {$clinic->name} clinic, and it is your {$booking->turn} turn", false, 400);
-        }
+        $turn = $fundation->bookings()->where('date', $request->date)->whereDone(0)->max('turn');
 
-        $turn = $worker->bookings('doctor_id')->where('booking_date', '=', $request->date)->whereIsDone(0)->max('turn');
+        if (\Arr::get($doctor->plans->first()->privileges, 'booking.limit') <= $turn) {
+            return 'Sorry, This doctor is not available';
+        }
 
         $turn = !is_null($turn) ? ($turn + 1) : 1;
 
-        $booking = auth()->user()->bookings()->create([
-            'doctor_id' => $worker->id,
-            'clinic_id' => $clinic->id,
-            'booking_date' => $request->date,
-            'code' => random_int(10000000, 99999999),
+        $booking = $fundation->bookings()->create([
+            'user_id' => auth()->id(),
+            'date' => $request->date,
+            'code' => random_int(12345678, 87654321),
             'turn' => $turn
         ]);
 
-        return alert("The booking has been made successfully with Dr. {$worker->fullname()} in the {$clinic->name} clinic, and it is your {$booking->turn} turn");
-    }
-
-    /**
-     * Appointment update for booking
-     * @param 
-     * 
-     * */
-    public function update(Clinic $clinic, User $worker, UpdateBookingRequest $request)
-    {
-        $booking = auth()->user()->bookings()
-        ->whereClinicId($clinic->id)
-        ->whereDoctorId($worker->id)
-        ->whereCode($request->code)->first();
-
-        dd($booking->update());
+        return alert("The booking has been made successfully with Dr. {$doctor->fullname()} in the {$fundation->name} {$model}, and it is your {$booking->turn} turn");
     }
 
     /**
@@ -114,34 +105,29 @@ class BookingController extends Controller
      * Get the total count of completed bookings for a doctor
      * @return int
      * */
-    public function completedBookingsCount(User $doctor): int
+    public function completedBookingsCount($model, $username): int
     {
-        return (int) $doctor->bookings('doctor_id')->whereIsDone(true)->count();
+        $foundation = $this->model($model)->whereUsername($username)->firstOrFail();
+        return (int) $foundation->bookings()->whereIsDone(true)->count() ?? 0;
     }
 
     /**
      * Get a previous booking today for the doctor
      * @return ResponseJson
      * */
-    public function todayBookings()
+    public function todayBookings($model, $username)
     {
         
     }
 
-    public function cancel(Clinic $clinic, User $worker, CancelBookingRequest $request)
+    public function delete($model, $username, CancelBookingRequest $request)
     {
-        $booking = auth()->user()->bookings()
-           ->whereClinicId($clinic->id)
-           ->whereDoctorId($worker->id)
-           ->whereCode($request->code)
-           ->first();
+        $foundation = $this->model($model)->whereUsername($username)->firstOrFail();
 
-        if (!$booking) {
-            return alert('Sorry, this booking code is not valid', false, 400);
+        if ($foundation->bookings()->whereCode($request->code)->delete()) {
+            return alert('Your reservation has been successfully cancelled');
         }
 
-        $booking->delete();
-
-        return alert('Your reservation has been successfully cancelled');
+        abort(404);
     }
 }

@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+
+use Modules\Device\Events\FlushExpiredCodeDeviceVerify,
+    Modules\Device\Listeners\DeleteAllExpiredCodeVerifyDevice;
+
+use Modules\User\Events\Registered,
+    Modules\User\Listeners\NewSystemDirectory,
+    Modules\User\Listeners\AttachedThroughTheFreeDefaultPlanIfDoctor,
+    Modules\User\Listeners\CreateAndAttachedThroughRegisteredDevice;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,8 +21,14 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
-            SendEmailVerificationNotification::class,
+            NewSystemDirectory::class,
+            // AttachedThroughTheFreeDefaultPlanIfDoctor::class,
+            CreateAndAttachedThroughRegisteredDevice::class
         ],
+
+        FlushExpiredCodeDeviceVerify::class => [
+            DeleteAllExpiredCodeVerifyDevice::class
+        ]
     ];
 
     /**

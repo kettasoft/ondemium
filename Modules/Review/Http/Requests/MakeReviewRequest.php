@@ -3,6 +3,8 @@
 namespace Modules\Review\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class MakeReviewRequest extends FormRequest
 {
@@ -14,7 +16,8 @@ class MakeReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'body' => ['required', 'string', 'max:1000'],
+            'stars' => ['nullable', 'in:1,2,3,4,5']
         ];
     }
 
@@ -26,5 +29,14 @@ class MakeReviewRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ]));
     }
 }

@@ -2,51 +2,21 @@
 
 namespace Modules\Post\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Modules\Post\Http\Requests\CreatePostRequest;
 use Modules\Post\Models\Post;
 use Modules\User\Models\User;
 
-
 class PostController extends Controller
 {
-
     /**
      * Display a listing of the posts.
      * @return Renderable
      */
     public function all()
     {
-        $posts = Post::simplePaginate(30);
+        $posts = Post::simplePaginate(20);
         return response()->json($posts);
-    }
-
-    /**
-     * Display a listing of the posts for current logged in.
-     * @return ResponseJson
-     */
-    public function my()
-    {
-        $posts = auth()->user()->posts()->paginate(20);
-        return response()->json($posts);
-    }
-
-    /**
-     * View posts for a specific user or doctor.
-     * @param int $created_id
-     * @param int|null $post_id
-     * @return ResponseJson
-     */
-    public function show(int $created_id, $post_id = null)
-    {
-        $posts = Post::where('createdable_id', $created_id);
-        if (is_null($post_id)) {
-            return response()->json($posts->paginate(20));
-        }
-
-        return response()->json($posts->where('id', $post_id)->first());
     }
 
     public function get(User $user)
@@ -56,52 +26,55 @@ class PostController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param CreatePostRequest $request
      * @return ResponseJson
      */
     public function create(CreatePostRequest $request)
     {
-        $originator = auth()->user();
+        $this->authorize('create', Post::class);
+        
+        $path = public_path("storage/users/" . auth()->user()->username . '/post');
+        $photos = $request->file('photos');
 
-        $originator->posts()->create($request->all());
+        $file = $photos->move($path, \Str::random(16) . '.' . $photos->guessExtension());
+
+        $path = explode(config('app.name'), $file->getPathname())[1];
+
+        auth()->user()->posts()->create(array_merge($request->all(), [
+            'photos' => json_encode(['photos' => $path]),
+        ]));
 
         return alert('The post was created successfully.', status:201);
     }
 
     /**
      * Update the specified resource in storage.
+     * @param Post $post
+     * @param User $user
      * @param CreatePostRequest $request
-     * @param int $id
      * @return ResponseJson
      */
-    public function update(CreatePostRequest $request, int $id)
+    public function update(User $user, Post $post, CreatePostRequest $request)
     {
-        $originator = auth()->user();
+        $this->authorize('update', $post);
 
-        if ($post = $originator->posts()->where('id', $id)->first()) {
-            $post->update($request->all());
+        if ($post->update($request->all())) {
             return alert('The post was updated successfully.');
         }
-
-        return alert('An unknown error occurred', false, 402);
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
+     * @param Post $post
+     * @param User $user
      * @return ResponseJson
      */
-    public function delete(int $id)
+    public function delete(User $user, Post $post)
     {
-        $originator = auth()->user();
+        $this->authorize('delete', $post);
 
-        $post = $originator->posts()->where('id', $id)->first();
-
-        if ($post) {
-            $post->delete();
+        if ($post->delete()) {
             return alert('The post was deleted successfully.');
         }
-
-        return alert('An unknown error occurred', false, 402);
     }
 }
